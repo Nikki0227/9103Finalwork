@@ -40,4 +40,7 @@ This mechanic supports the overall vision of the project by creating a serene an
 As shown in the image, all mechanisms work collaboratively on a shared P5 canvas, continuously updating the same interactive garden. They influence each other: user input affects flower movement, blooming, captions, and sound responses, while a time-based system controls the changing seasons and day/night cycles, and audio interactions such as rain and thunder further alter the atmosphere through visuals and sound effects. These mechanisms interact through shared environmental states, flower movement, and music. Conceptually, the project unifies these different mechanisms by depicting a vibrant, responsive ecosystem.
 
 *Final Flowchart*
+![reference 4](asset/Project.jpg)
 
+*Concept draft and our plan*
+[Link Text](https://www.figma.com/board/7YscZReD8ZMiSiOXHKcFZZ/9103coding?node-id=0-1&t=Xe31afqVZfyMg526-1)

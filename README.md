@@ -28,5 +28,5 @@ The time system begins running as soon as the user enters the experience. The en
 During the daytime phase, the scenes of spring, summer, autumn, and winter will play sequentially in a loop. The changing day–night cycle will also gradually affect the lighting and colour palette of the environment. The daytime phase lasts approximately 20 seconds, while the nighttime phase lasts approximately 15 seconds. All transitions are designed to be smooth and gradual rather than sudden.
 This mechanic supports the overall vision of the project by creating a serene and immersive environment. Through seasonal transitions, colour variation, and dynamic environmental movement, the system visually represents the passage of time and encourages users to experience the environment in a calm and reflective way.
 
-Time-based Mechanic Flowchart:
+*Time-based Mechanic Flowchart*
 ![Time-based Mechanic Flowchart](35049e1c047bb1c558e6916e042debaf.png)

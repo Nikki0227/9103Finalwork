@@ -33,4 +33,4 @@ During the daytime phase, the scenes of spring, summer, autumn, and winter will 
 This mechanic supports the overall vision of the project by creating a serene and immersive environment. Through seasonal transitions, colour variation, and dynamic environmental movement, the system visually represents the passage of time and encourages users to experience the environment in a calm and reflective way.
 
 *Time-based Mechanic Flowchart*
-![Time-based Mechanic Flowchart](asset/Time-based Mechanic Flowchart.png)
+![Time-based Mechanic Flowchart](asset/Time-based Mechanic Flowchart.jpg)

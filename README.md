@@ -17,6 +17,7 @@ We chose to create an original interactive artwork that presents a living season
 I’m planning to explore the audio mechanic, even though we haven’t fully learned it yet. My idea is to use thunder or rain sounds and let the audio levels influence the visuals. For example, loud thunder could trigger bright flashes or stronger wind‑like movement in the flowers, while softer rain sounds could control the intensity of raindrops or ripples. This mechanic would make the weather feel more dramatic and immersive, because the visuals and sound would react to each other. Even if I start with something simple, connecting audio to the environment will help reinforce the mood of the piece and make the stormy scenes feel more realistic.  
 
 *User flow draft for Audio*
+
 ![flow_chart_Audio](asset/flow_chart.jpg)
 
 ### Fangrong Cao(User input)

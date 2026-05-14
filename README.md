@@ -34,3 +34,10 @@ This mechanic supports the overall vision of the project by creating a serene an
 
 *Time-based Mechanic Flowchart*
 ![Time-basedMechanicFlowchart](asset/Time-basedMechanicFlowchart.png)
+
+
+## Part 3: Putting It Together
+As shown in the image, all mechanisms work collaboratively on a shared P5 canvas, continuously updating the same interactive garden. They influence each other: user input affects flower movement, blooming, captions, and sound responses, while a time-based system controls the changing seasons and day/night cycles, and audio interactions such as rain and thunder further alter the atmosphere through visuals and sound effects. These mechanisms interact through shared environmental states, flower movement, and music. Conceptually, the project unifies these different mechanisms by depicting a vibrant, responsive ecosystem.
+
+*Final Flowchart*
+

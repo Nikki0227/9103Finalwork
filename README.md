@@ -42,5 +42,5 @@ As shown in the image, all mechanisms work collaboratively on a shared P5 canvas
 *Final Flowchart*
 ![reference 4](asset/Project.jpg)
 
-*Concept draft and our plan*
-[Link Text](https://www.figma.com/board/7YscZReD8ZMiSiOXHKcFZZ/9103coding?node-id=0-1&t=Xe31afqVZfyMg526-1)
+*To view our concept draft and details*
+[Figma Link](https://www.figma.com/board/7YscZReD8ZMiSiOXHKcFZZ/9103coding?node-id=0-1&t=Xe31afqVZfyMg526-1)

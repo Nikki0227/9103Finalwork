@@ -18,5 +18,6 @@ We chose to create an original interactive artwork that presents a living season
 
 ### Fangrong Cao(User input)
 I plan to develop a user interaction system that integrates mouse operation, keyboard control, and dynamic subtitle technology to create an immersive seasonal musical garden. Animated subtitles will guide users to interact with the environment; for example, clicking on a flower will trigger its blooming and play music, while mouse movement will affect surrounding plants, causing them to move. Keyboard input will control the garden's transitions between the four seasons. These interactive mechanisms, through simple and easy-to-understand methods, help users experience the fun of this artwork, aligning with the project's vision. This flexible and responsive interactive approach fully reflects the project's focused pursuit of dynamic experiences, environmental evolution, and immersive digital art.
+
 *User flow draft for user input*
 ![reference 3](asset/Untitled.jpg)

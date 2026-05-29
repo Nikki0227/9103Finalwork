@@ -13,6 +13,25 @@
   </head>
 
   <body>
+    <main id="layer-stack" aria-label="Interactive garden layers">
+      <iframe
+        class="sketch-layer timebase-layer"
+        src="timebase-layer.html"
+        title="Time based garden layer"
+      ></iframe>
+      <iframe
+        class="sketch-layer userinput-layer"
+        src="userinput-layer.html"
+        title="User input garden layer"
+      ></iframe>
+      <iframe
+        class="sketch-layer audiobase-layer"
+        src="audiobase-layer.html"
+        title="Audio garden layer"
+        allow="autoplay"
+      ></iframe>
+    </main>
+
   <!-------Introduction------->
   <div id="how-to-play" class="instructions">
         <h2>• HOW TO PLAY •</h2>
@@ -31,10 +50,5 @@
     </div>
  <!-------Introduction------->
 
-
-    <script src="input_controls_fcao0453.js"></script>
-    <script src="Audiobase_yguo0084.js"></script>
-    <script src="Timebase_xnie0227.js"></script>
-    <script src="sketch4.js"></script>
   </body>
 </html>

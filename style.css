@@ -2,11 +2,45 @@ html, body {
   margin: 0;
     padding: 0;
     overflow: hidden; /* 防止出现滚动条 */
+    width: 100%;
+    height: 100%;
 }
 
-/* canvas {
+#layer-stack {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+}
+
+.sketch-layer {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
+
+.timebase-layer {
+    z-index: 1;
+}
+
+.userinput-layer {
+    z-index: 2;
+    opacity: 0.82;
+}
+
+.audiobase-layer {
+    z-index: 3;
+    pointer-events: none;
+}
+
+.layer-page {
+    background: transparent;
+}
+
+canvas {
   display: block;
-}   暂时去掉      */
+}
 
 .instructions {
     position: absolute;

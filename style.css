@@ -1,8 +1,49 @@
 html, body {
   margin: 0;
-  padding: 0;
+    padding: 0;
+    overflow: hidden; /* 防止出现滚动条 */
 }
 
-canvas {
+/* canvas {
   display: block;
+}   暂时去掉      */
+
+.instructions {
+    position: absolute;
+    top: 50px;
+    left: 30px;
+    width: 250px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.2); /* 半透明背景 */
+    backdrop-filter: blur(10px); /* 磨砂玻璃效果 */
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    z-index: 100; /* 确保在画布上方 */
+}
+
+.instructions h2 {
+    text-align: center;
+    font-size: 18px;
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+}
+
+.instruction-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.icon {
+    font-size: 24px;
+    margin-right: 15px;
+}
+
+.instruction-item p {
+    font-size: 14px;
+    line-height: 1.4;
+    margin: 0;
 }

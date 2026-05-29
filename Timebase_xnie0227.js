@@ -2,16 +2,20 @@ let seasons = ["spring", "summer", "autumn", "winter"];
 let seasonIndex = 0;
 
 // =====================================================
-// TIMING
+// TIMING (更新为 5秒过渡)
 // =====================================================
 
-let dayDuration = 20000;        // 20s daytime
-let sunsetTransition = 2000;   // 2s sunset
+let dayDuration = 20000;         // 白天：20秒
+let sunsetTransition = 5000;     // 黄昏过渡：5秒
 
-let nightDuration = 15000;     // 15s night
-let sunriseTransition = 2000;  // 2s sunrise
+let nightDuration = 15000;       // 黑夜总长：15秒
+let sunriseTransition = 5000;    // 黎明过渡：5秒
+
+// 关键调整：在黑夜开始后 7 秒切换季节
+let seasonChangeDelayInNight = 7000; 
 
 let cycleStart;
+let seasonChanged = false; // 用于防止在第7秒重复切换的锁
 
 // =====================================================
 // OBJECTS
@@ -20,32 +24,29 @@ let cycleStart;
 let leaves = [];
 let snowflakes = [];
 let stars = [];
-let meteors = [];
+let meteor;
 
-// Global transition amount
-let transitionAmount = 0;
+// =====================================================
+// SETUP
+// =====================================================
 
 function setup() {
-
   createCanvas(windowWidth, windowHeight);
 
   cycleStart = millis();
 
   // Leaves
   for (let i = 0; i < 40; i++) {
-
     leaves.push(createLeaf());
   }
 
   // Snow
   for (let i = 0; i < 80; i++) {
-
     snowflakes.push(createSnowflake());
   }
 
   // Stars
   for (let i = 0; i < 200; i++) {
-
     stars.push({
       x: random(width),
       y: random(height * 0.75),
@@ -53,12 +54,14 @@ function setup() {
     });
   }
 
-  // Only 1 meteor
-  meteors.push(createMeteor());
+  meteor = createMeteor();
 }
 
-function draw() {
+// =====================================================
+// MAIN LOOP
+// =====================================================
 
+function draw() {
   let elapsed = millis() - cycleStart;
 
   let totalCycle =
@@ -67,105 +70,110 @@ function draw() {
     nightDuration +
     sunriseTransition;
 
-  // Restart cycle
+  // 检查是否到达黑夜的第 7 秒（即 白天 + 黄昏 + 7秒）
+  let triggerTime = dayDuration + sunsetTransition + seasonChangeDelayInNight;
+  
+  if (elapsed >= triggerTime && !seasonChanged) {
+    seasonIndex = (seasonIndex + 1) % seasons.length;
+    seasonChanged = true; // 锁定，直到进入下一个大循环
+  }
+
+  // 整个时间周期结束，重置时钟
   if (elapsed > totalCycle) {
-
     cycleStart = millis();
-
-    seasonIndex =
-      (seasonIndex + 1) % seasons.length;
-
     elapsed = 0;
+    seasonChanged = false; // 解锁，允许新一轮的黑夜切换季节
   }
 
   // =====================================================
-  // DAY
+  // TRANSITION AMOUNT (0 = 纯白天, 1 = 纯黑夜)
   // =====================================================
+  let transitionAmount = 0;
 
+  // 1. DAY
   if (elapsed < dayDuration) {
-
     transitionAmount = 0;
   }
-
-  // =====================================================
-  // SUNSET
-  // =====================================================
-
-  else if (
-    elapsed <
-    dayDuration + sunsetTransition
-  ) {
-
-    transitionAmount = map(
-      elapsed,
-      dayDuration,
-      dayDuration + sunsetTransition,
-      0,
-      1
-    );
+  // 2. SUNSET (5秒渐变)
+  else if (elapsed < dayDuration + sunsetTransition) {
+    transitionAmount = map(elapsed, dayDuration, dayDuration + sunsetTransition, 0, 1);
   }
-
-  // =====================================================
-  // NIGHT
-  // =====================================================
-
-  else if (
-    elapsed <
-    dayDuration +
-      sunsetTransition +
-      nightDuration
-  ) {
-
+  // 3. NIGHT (15秒纯黑夜)
+  else if (elapsed < dayDuration + sunsetTransition + nightDuration) {
     transitionAmount = 1;
   }
-
-  // =====================================================
-  // SUNRISE
-  // =====================================================
-
+  // 4. SUNRISE (5秒渐变)
   else {
-
     transitionAmount = map(
       elapsed,
-      dayDuration +
-        sunsetTransition +
-        nightDuration,
+      dayDuration + sunsetTransition + nightDuration,
       totalCycle,
       1,
       0
     );
   }
 
-  // =====================================================
-  // DRAW ENVIRONMENT
-  // =====================================================
-
+  // SKY
   drawSky(transitionAmount);
 
-  // Stars
+  // CELESTIAL BODIES (SUN & MOON)
+  drawSunMoon(elapsed, totalCycle);
+
+  // STARS + METEOR
   if (transitionAmount > 0) {
-
     drawStars(transitionAmount);
-
     drawMeteor(transitionAmount);
   }
 
-  // Leaves and snow only during daytime
+  // DAY ELEMENTS (仅在有阳光或微光时显示，纯黑夜部分可根据喜好保留或隐藏)
   if (transitionAmount < 1) {
-
     if (seasons[seasonIndex] === "autumn") {
-
       drawLeaves();
     }
-
     if (seasons[seasonIndex] === "winter") {
-
       drawSnowflakes();
     }
   }
 
-  // Ground LAST
+  // GROUND
   drawGround(transitionAmount);
+}
+
+// =====================================================
+// SUN + MOON ORBIT
+// =====================================================
+
+function drawSunMoon(elapsed, totalCycle) {
+  let cx = width / 2;
+  let cy = height * 0.75; 
+
+  let radiusX = width * 0.45;  
+  let radiusY = height * 0.45; 
+
+  let dayEnd = dayDuration;
+  let sunsetEnd = dayDuration + sunsetTransition;
+
+  // 1. 太阳逻辑：在 白天 + 黄昏 期间从左到右逆时针运行
+  if (elapsed < sunsetEnd) {
+    let sunAngle = map(elapsed, 0, sunsetEnd, PI, 0);
+    let sunX = cx + cos(sunAngle) * radiusX;
+    let sunY = cy - sin(sunAngle) * radiusY; 
+
+    noStroke();
+    fill(255, 220, 80);
+    ellipse(sunX, sunY, 60);
+  }
+
+  // 2. 月亮逻辑：在 黄昏结束 到 整个周期结束 期间从左到右逆时针运行
+  if (elapsed >= dayEnd) {
+    let moonAngle = map(elapsed, dayEnd, totalCycle, PI, 0);
+    let moonX = cx + cos(moonAngle) * radiusX;
+    let moonY = cy - sin(moonAngle) * radiusY; 
+
+    noStroke();
+    fill(220);
+    ellipse(moonX, moonY, 50);
+  }
 }
 
 // =====================================================
@@ -173,70 +181,36 @@ function draw() {
 // =====================================================
 
 function drawSky(t) {
-
   let season = seasons[seasonIndex];
+  let dayTop, dayBottom;
 
-  let dayTop;
-  let dayBottom;
-
-  // Spring
   if (season === "spring") {
-
     dayTop = color(135, 206, 235);
     dayBottom = color(255, 200, 220);
   }
-
-  // Summer
   if (season === "summer") {
-
     dayTop = color(80, 180, 255);
     dayBottom = color(255, 240, 150);
   }
-
-  // Autumn
   if (season === "autumn") {
-
     dayTop = color(255, 170, 100);
     dayBottom = color(255, 220, 180);
   }
-
-  // Winter
   if (season === "winter") {
-
     dayTop = color(180, 220, 255);
     dayBottom = color(230, 240, 255);
   }
 
-  // Night sky
-  let nightTop = color(0);
-  let nightBottom = color(0);
+  let nightTop = color(10, 15, 30);      
+  let nightBottom = color(25, 30, 50);
 
-  // Smooth transition
-  let topColor =
-    lerpColor(dayTop, nightTop, t);
+  let topColor = lerpColor(dayTop, nightTop, t);
+  let bottomColor = lerpColor(dayBottom, nightBottom, t);
 
-  let bottomColor =
-    lerpColor(dayBottom, nightBottom, t);
-
-  // Gradient sky
   for (let y = 0; y < height; y++) {
-
-    let inter = map(
-      y,
-      0,
-      height,
-      0,
-      1
-    );
-
-    let c = lerpColor(
-      topColor,
-      bottomColor,
-      inter
-    );
-
+    let inter = map(y, 0, height, 0, 1);
+    let c = lerpColor(topColor, bottomColor, inter);
     stroke(c);
-
     line(0, y, width, y);
   }
 }
@@ -246,55 +220,62 @@ function drawSky(t) {
 // =====================================================
 
 function drawGround(t) {
-
   let season = seasons[seasonIndex];
+  let grass;
 
-  let grassColor;
+  if (season === "spring") grass = color(120, 220, 120);
+  if (season === "summer") grass = color(80, 200, 90);
+  if (season === "autumn") grass = color(170, 140, 70);
+  if (season === "winter") grass = color(230);
 
-  // Spring
-  if (season === "spring") {
-
-    grassColor = color(120, 220, 120);
-  }
-
-  // Summer
-  if (season === "summer") {
-
-    grassColor = color(80, 200, 90);
-  }
-
-  // Autumn
-  if (season === "autumn") {
-
-    grassColor = color(170, 140, 70);
-  }
-
-  // Winter
-  if (season === "winter") {
-
-    grassColor = color(230);
-  }
-
-  // Fade to black at night
-  let nightGrass = color(0);
-
-  grassColor =
-    lerpColor(
-      grassColor,
-      nightGrass,
-      t
-    );
+  let night = color(15, 25, 15); 
+  grass = lerpColor(grass, night, t);
 
   noStroke();
+  fill(grass);
+  rect(0, height * 0.75, width, height * 0.25);
+}
 
-  fill(grassColor);
+// =====================================================
+// STARS
+// =====================================================
 
-  rect(
-    0,
-    height * 0.75,
-    width,
-    height * 0.25
-  );
+function drawStars(t) {
+  noStroke();
+  for (let s of stars) {
+    let a = random(100, 255);
+    fill(255, a * t);
+    ellipse(s.x, s.y, s.size);
+  }
+}
+
+// =====================================================
+// METEOR
+// =====================================================
+
+function createMeteor() {
+  return {
+    x: random(-300, width),
+    y: random(0, height / 2),
+    vx: random(8, 14),
+    vy: random(4, 7),
+    len: random(80, 140)
+  };
+}
+
+function drawMeteor(t) {
+  let m = meteor;
+  stroke(255, 255 * t);
+  strokeWeight(2);
+  line(m.x, m.y, m.x - m.len, m.y - m.len * 0.5);
+
+  m.x += m.vx;
+  m.y += m.vy;
+
+  if (m.x > width + 200 || m.y > height + 200) {
+    m.x = random(-300, -100);
+    m.y = random(0, height / 2);
+  }
 }
 
 // =====================================================
@@ -302,44 +283,26 @@ function drawGround(t) {
 // =====================================================
 
 function createLeaf() {
-
   return {
-
     x: random(width),
-
     y: random(-height, height),
-
     speed: random(1, 3),
-
     drift: random(-1, 1),
-
     size: random(8, 15)
   };
 }
 
 function drawLeaves() {
-
   fill(255, 120, 50);
-
   noStroke();
+  for (let l of leaves) {
+    ellipse(l.x, l.y, l.size);
+    l.y += l.speed;
+    l.x += l.drift;
 
-  for (let leaf of leaves) {
-
-    ellipse(
-      leaf.x,
-      leaf.y,
-      leaf.size
-    );
-
-    leaf.y += leaf.speed;
-
-    leaf.x += leaf.drift;
-
-    if (leaf.y > height) {
-
-      leaf.y = random(-100, 0);
-
-      leaf.x = random(width);
+    if (l.y > height) {
+      l.y = random(-100, 0);
+      l.x = random(width);
     }
   }
 }
@@ -349,132 +312,32 @@ function drawLeaves() {
 // =====================================================
 
 function createSnowflake() {
-
   return {
-
     x: random(width),
-
     y: random(-height, height),
-
     speed: random(1, 2),
-
     size: random(2, 6)
   };
 }
 
 function drawSnowflakes() {
-
   fill(255);
-
   noStroke();
-
   for (let s of snowflakes) {
-
-    ellipse(
-      s.x,
-      s.y,
-      s.size
-    );
-
+    ellipse(s.x, s.y, s.size);
     s.y += s.speed;
 
     if (s.y > height) {
-
       s.y = random(-100, 0);
-
       s.x = random(width);
     }
   }
 }
 
 // =====================================================
-// STARS
-// =====================================================
-
-function drawStars(t) {
-
-  noStroke();
-
-  for (let star of stars) {
-
-    let twinkle =
-      random(100, 255);
-
-    fill(
-      255,
-      twinkle * t
-    );
-
-    ellipse(
-      star.x,
-      star.y,
-      star.size
-    );
-  }
-}
-
-// =====================================================
-// METEOR
-// =====================================================
-
-function createMeteor() {
-
-  return {
-
-    x: random(-500, width),
-
-    y: random(0, height / 2),
-
-    speedX: random(8, 14),
-
-    speedY: random(4, 7),
-
-    length: random(80, 140)
-  };
-}
-
-function drawMeteor(t) {
-
-  let m = meteors[0];
-
-  stroke(
-    255,
-    255 * t
-  );
-
-  strokeWeight(2);
-
-  line(
-    m.x,
-    m.y,
-    m.x - m.length,
-    m.y - m.length * 0.5
-  );
-
-  m.x += m.speedX;
-
-  m.y += m.speedY;
-
-  // Reset meteor
-  if (
-    m.x > width + 200 ||
-    m.y > height + 200
-  ) {
-
-    m.x = random(-300, -100);
-
-    m.y = random(0, height / 2);
-  }
-}
-
-// =====================================================
-// WINDOW RESIZE
+// RESIZE
 // =====================================================
 
 function windowResized() {
-
-  resizeCanvas(
-    windowWidth,
-    windowHeight
-  );
+  resizeCanvas(windowWidth, windowHeight);
 }

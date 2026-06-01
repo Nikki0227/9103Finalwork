@@ -1,5 +1,6 @@
 // ==================== Globals ====================
 let fft;
+let thunderAmplitude;
 
 let windSound, rainSound, thunderSound, insectSound, birdSound, bgm;
 
@@ -16,7 +17,10 @@ const CONFIG = {
     maxGap: 4200,
     fade: 1400,
     birdSpawnGap: 1200,
-    insectSpawnGap: 1000
+    insectSpawnGap: 1000,
+    thunderPeakThreshold: 0.12,
+    thunderPeakRise: 1.18,
+    thunderLightningGap: 280
   },
   colors: {
     cloud: [176, 218, 255, 180],
@@ -57,6 +61,13 @@ function playSound(sound, volume = 0.75) {
   sound.playMode("sustain");
   sound.setVolume(volume);
   sound.play();
+}
+
+function startBackgroundMusic() {
+  if (!bgm || !bgm.isLoaded() || bgm.isPlaying()) return;
+
+  bgm.setVolume(0.35);
+  bgm.loop();
 }
 
 // ==================== Clouds ====================
@@ -584,6 +595,8 @@ class SoundInteractionController {
     this.effectLevels = { bird: 0, insect: 0, rain: 0, thunder: 0, wind: 0 };
     this.lastBirdSpawnAt = 0;
     this.lastInsectSpawnAt = 0;
+    this.lastThunderLightningAt = 0;
+    this.lastThunderLevel = 0;
     this.initialized = false;
   }
 
@@ -632,7 +645,10 @@ class SoundInteractionController {
     if (type === "bird") this.spawnBird();
     if (type === "insect") this.spawnInsect();
     if (type === "rain" && !this.rainStartedAt) this.rainStartedAt = millis();
-    if (type === "thunder") this.lightning.trigger();
+    if (type === "thunder") {
+      this.lastThunderLevel = 0;
+      this.lastThunderLightningAt = 0;
+    }
   }
 
   updateAudioScheduler() {
@@ -664,6 +680,26 @@ class SoundInteractionController {
 
     this.effectLevels = nextLevels;
     this.audioEvents = this.audioEvents.filter(event => now - event.start < event.duration);
+  }
+
+  updateThunderLightning() {
+    if (!thunderAmplitude || !thunderSound || !thunderSound.isPlaying()) {
+      this.lastThunderLevel = 0;
+      return;
+    }
+
+    let now = millis();
+    let level = thunderAmplitude.getLevel();
+    let isStrongPeak = level > CONFIG.audio.thunderPeakThreshold;
+    let isRisingPeak = level > max(this.lastThunderLevel * CONFIG.audio.thunderPeakRise, CONFIG.audio.thunderPeakThreshold);
+    let hasCooledDown = now - this.lastThunderLightningAt > CONFIG.audio.thunderLightningGap;
+
+    if (isStrongPeak && isRisingPeak && hasCooledDown) {
+      this.lightning.trigger();
+      this.lastThunderLightningAt = now;
+    }
+
+    this.lastThunderLevel = level;
   }
 
   spawnBird() {
@@ -731,6 +767,7 @@ class SoundInteractionController {
 
     this.updateAudioScheduler();
     this.updateEffectLevels();
+    this.updateThunderLightning();
 
     let now = millis();
     let birdLevel = this.effectLevels.bird;
@@ -823,6 +860,7 @@ function preload() {
   thunderSound = loadSound("asset/thunder.mp3");
   insectSound = loadSound("asset/insect.mp3");
   birdSound = loadSound("asset/bird.mp3");
+  bgm = loadSound("asset/bgm.mp3");
 }
 
 function setup() {
@@ -830,9 +868,12 @@ function setup() {
   clear();
 
   fft = new p5.FFT();
+  thunderAmplitude = new p5.Amplitude(0.75);
+  thunderAmplitude.setInput(thunderSound);
   soundInteraction = new SoundInteractionController();
   soundInteraction.init();
   soundInteraction.startAudioInteraction();
+  startBackgroundMusic();
 
   window.soundInteraction = soundInteraction;
 }
@@ -845,4 +886,12 @@ function draw() {
 
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
+}
+
+function mousePressed() {
+  startBackgroundMusic();
+}
+
+function touchStarted() {
+  startBackgroundMusic();
 }

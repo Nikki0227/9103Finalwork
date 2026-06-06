@@ -64,10 +64,10 @@ class Flower {
     this.currentSize = this.baseSize;     // 当前实时大小
     this.targetSize = this.baseSize;      // 目标缩放大小
     
-    // 逻辑：越大的花花瓣越多 (5-8片)
-    this.petalCount = floor(map(this.baseSize, 30, 60, 5, 8.9)); 
+    // 逻辑：越大的花花瓣越多 (6-8片)
+    this.petalCount = floor(map(this.baseSize, 30, 60, 6, 8.9)); 
     
-    this.hue = random(280, 360);          // 随机花朵颜色
+    this.hue = random(240, 360);          // 随机花朵颜色
     
     // 摆动相关变量
     this.angle = 0;                       // 当前旋转角度
@@ -106,10 +106,10 @@ class Flower {
     // 绘制花茎 (从 0,0 向上绘制到负值方向)
     stroke(140, 40, 30);
     strokeWeight(4);
-    line(0, 0, 0, -60); // 固定长度的花茎
+    line(0, 0, 0, -80); // 固定长度的花茎
 
     // 移动坐标到花头（花茎顶端）
-    translate(0, -60);
+    translate(0, -80);
 
     // 绘制花瓣：使用 for loop 和 push/pop
     noStroke();

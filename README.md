@@ -28,7 +28,7 @@ I’m planning to explore the audio mechanic, even though we haven’t fully lea
 
 *User flow draft for Audio*
 
-![flow_chart_Audio](asset/flow_chart.jpg)
+![flow_chart_Audio](asset/audio_flow.jpg)
 
 ### Fangrong Cao(User input)
 I plan to develop a user interaction system that integrates mouse operation, keyboard control, and dynamic subtitle technology to create an immersive seasonal musical garden. Animated subtitles will guide users to interact with the environment; for example, clicking on a flower will trigger its blooming and play music, while mouse movement will affect surrounding plants, causing them to move. Keyboard input will control the garden's transitions between the four seasons. These interactive mechanisms, through simple and easy-to-understand methods, help users experience the fun of this artwork, aligning with the project's vision. This flexible and responsive interactive approach fully reflects the project's focused pursuit of dynamic experiences, environmental evolution, and immersive digital art.
@@ -47,7 +47,7 @@ This mechanic supports the overall vision of the project by creating a serene an
 
 
 # AI acknowledgement
-We acknowledged that we used ds  AItool Gemini to improve final effect and foster more harmonious cooperation between various mechanisms.
+We acknowledged that we used AItool Gemini, Chatgpt and Codex to improve final effect and foster more harmonious cooperation between various mechanisms.
 
 # Interaction instructions
 As described in the interface, users first enter a garden where they see flowers sprouting from the ground; they can move their mouse to sway the flowers or click on them to make them bloom, while the surrounding season and weather shift automatically over time.

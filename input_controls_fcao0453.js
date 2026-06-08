@@ -17,9 +17,9 @@ function setup() {
 
 function draw() {
   background(200, 20, 95);
-  // 使用 clear() 保持背景透明，露出 Timebase 的效果，同时防止残影
+  // Use clear() to maintain a transparent background—revealing the 
+  //Timebase effect—while preventing ghosting.
   clear(); 
-
   // 更新并渲染所有花朵
   for (let f of flowers) {
     f.update(); 
@@ -47,7 +47,9 @@ function showSubtitle(txt) {
 
 function updateSubtitles() {
   subtitleAlpha = lerp(subtitleAlpha, targetAlpha, 0.05);
-  fill(0, 0, 20, subtitleAlpha);
+  // HSB参数说明：0 色相(无所谓), 0 饱和度(设为0即无色), 100 亮度(设为100即最亮白), 
+  //subtitleAlpha 透明度
+  fill(0, 0, 100, subtitleAlpha);
   noStroke();
   textAlign(CENTER);
   textSize(20);
@@ -93,7 +95,7 @@ class Flower {
     // 4. 长按交互
     if (this.currentStemHeight > this.maxStemHeight * 0.8) {
       if (mouseIsPressed && dist(mouseX, mouseY, this.x, this.y - this.currentStemHeight) < this.currentSize) {
-        this.targetSize = this.baseSize * 1.5; 
+        this.targetSize = this.baseSize * 1.8; 
         if (!this.isBeingPressed) {
           showSubtitle("Deeply growing..."); 
           this.isBeingPressed = true;
@@ -112,7 +114,7 @@ class Flower {
 
     // --- 绘制花茎 ---
     stroke(140, 40, 30); // 深绿色
-    strokeWeight(4);
+    strokeWeight(5);
     line(0, 0, 0, -this.currentStemHeight); 
 
     // --- 绘制叶子 (修改：位置较低且左右对称) ---
@@ -129,7 +131,7 @@ class Flower {
     // --- Draw the petals ---
     if (this.currentStemHeight > 10) {
       noStroke();
-      fill(this.hue, 70, 90, 85);
+      fill(this.hue, 70, 90, 95);
       for (let i = 0; i < this.petalCount; i++) {
         push();
         rotate(TWO_PI * i / this.petalCount); 
@@ -137,7 +139,7 @@ class Flower {
         pop();
       }
 
-      // --- Draw the stamens and pistils. ---
+      // --- Draw the stamens ---
       fill(50, 80, 100);
       circle(0, 0, this.currentSize * 0.3);
     }
@@ -171,7 +173,9 @@ class Flower {
   checkHover(mx, my) {
     let d = dist(mx, my, this.x, this.y - this.currentStemHeight);
     if (d < 50) {
-      this.swingForce = 0.5; 
+      this.swingForce = 0.4; 
     }
   }
 }
+   
+//AI acknowledgement : I acknowledged that I used ds  AItool Gemini to improve click effect of flowers and subtitles.

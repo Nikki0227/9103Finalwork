@@ -51,10 +51,10 @@ canvas {
     background: rgba(255, 255, 255, 0.2); /* 半透明背景 */
     backdrop-filter: blur(10px); /* 磨砂玻璃效果 */
     border-radius: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.358);
     color: white;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    box-shadow: 0 8px 18px rgba(39, 39, 39, 0.2);
+    box-shadow: 0 8px 18px rgba(84, 84, 84, 0.2);
     z-index: 100; /* 确保在画布上方 */
 }
 

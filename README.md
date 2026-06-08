@@ -1,6 +1,6 @@
 # Quiz 9
 
-## Part 1: Project Direction
+## Part 1: Project Inspiration
 We chose to create an original interactive artwork that presents a living seasonal garden. Our vision is to build an environment where flowers, weather, sound, and user actions all shape the atmosphere together. We were inspired by generative nature artworks, seasonal landscape animations, and interactive installations that blend sound with visual changes. These references encouraged us to explore how time‑based transitions, audio‑reactive effects, and playful user interactions can create an immersive digital ecosystem. Our piece will show flowers growing, fading, and responding to rain, thunder, and user input, forming a poetic world where nature constantly evolves.
 
 *Reference pictures：*
@@ -10,7 +10,18 @@ We chose to create an original interactive artwork that presents a living season
 ![reference 2](asset/2.jpg)
 
 
-## Part 2: Mechanics
+## Part 2: Techniques
+As shown in the image, all mechanisms work collaboratively on a shared P5 canvas, continuously updating the same interactive garden. They influence each other: user input affects flower movement, blooming, captions, and sound responses, while a time-based system controls the changing seasons and day/night cycles, and audio interactions such as rain and thunder further alter the atmosphere through visuals and sound effects. These mechanisms interact through shared environmental states, flower movement, and music. Conceptually, the project unifies these different mechanisms by depicting a vibrant, responsive ecosystem.
+
+*Final Flowchart*
+![reference 4](asset/Project.jpg)
+
+*To view our concept draft and details*
+[Figma Link](https://www.figma.com/board/7YscZReD8ZMiSiOXHKcFZZ/9103coding?node-id=0-1&t=Xe31afqVZfyMg526-1)
+
+
+
+## Part 3: Mechanics ownership
 
 ### Yifan Guo(Audio):
 I’m planning to explore the audio mechanic, even though we haven’t fully learned it yet. My idea is to use thunder or rain sounds and let the audio levels influence the visuals. For example, loud thunder could trigger bright flashes or stronger wind‑like movement in the flowers, while softer rain sounds could control the intensity of raindrops or ripples. This mechanic would make the weather feel more dramatic and immersive, because the visuals and sound would react to each other. Even if I start with something simple, connecting audio to the environment will help reinforce the mood of the piece and make the stormy scenes feel more realistic.  
@@ -35,11 +46,10 @@ This mechanic supports the overall vision of the project by creating a serene an
 ![Time-basedMechanicFlowchart](asset/Time-basedMechanicFlowchart.png)
 
 
-## Part 3: Putting It Together
-As shown in the image, all mechanisms work collaboratively on a shared P5 canvas, continuously updating the same interactive garden. They influence each other: user input affects flower movement, blooming, captions, and sound responses, while a time-based system controls the changing seasons and day/night cycles, and audio interactions such as rain and thunder further alter the atmosphere through visuals and sound effects. These mechanisms interact through shared environmental states, flower movement, and music. Conceptually, the project unifies these different mechanisms by depicting a vibrant, responsive ecosystem.
+# AI acknowledgement
+We acknowledged that we used ds  AItool Gemini to improve final effect and foster more harmonious cooperation between various mechanisms.
 
-*Final Flowchart*
-![reference 4](asset/Project.jpg)
+# Interaction instructions
+As described in the interface, users first enter a garden where they see flowers sprouting from the ground; they can move their mouse to sway the flowers or click on them to make them bloom, while the surrounding season and weather shift automatically over time.
 
-*To view our concept draft and details*
-[Figma Link](https://www.figma.com/board/7YscZReD8ZMiSiOXHKcFZZ/9103coding?node-id=0-1&t=Xe31afqVZfyMg526-1)
+![How_to_react](asset/How_to_react.jpg)

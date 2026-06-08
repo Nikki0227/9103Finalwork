@@ -1,4 +1,4 @@
-# Quiz 9
+# Whispering Garden
 
 ## Part 1: Project Inspiration
 We chose to create an original interactive artwork that presents a living seasonal garden. Our vision is to build an environment where flowers, weather, sound, and user actions all shape the atmosphere together. We were inspired by generative nature artworks, seasonal landscape animations, and interactive installations that blend sound with visual changes. These references encouraged us to explore how time‑based transitions, audio‑reactive effects, and playful user interactions can create an immersive digital ecosystem. Our piece will show flowers growing, fading, and responding to rain, thunder, and user input, forming a poetic world where nature constantly evolves.

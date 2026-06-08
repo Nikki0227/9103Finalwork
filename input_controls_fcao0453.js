@@ -1,62 +1,70 @@
-let flowers = []; // 存储所有花朵对象的数组
-let subtitleText = "Welcome to the Garden"; // 屏幕显示的提示文本
-let subtitleAlpha = 0; // 字幕透明度
-let targetAlpha = 0; // 字幕目标透明度
-let lastWitherTime = 0; // 记录上次花朵凋谢的时间戳
+let flowers = []; // 
+let subtitleText = "Welcome to the Garden"; // Prompt text displayed on the screen
+let subtitleAlpha = 0; // Subtitle transparency
+let targetAlpha = 0; // Subtitle target transparency
+let lastWitherTime = 0; // Record the timestamp of the last flower withering
 
 function setup() {
   createCanvas(windowWidth, windowHeight); 
-  colorMode(HSB, 360, 100, 100, 100); // 使用 HSB 模式（色相、饱和度、亮度、透明度）
+  colorMode(HSB, 360, 100, 100, 100); // Use HSB color mode for easier color manipulation
 
-  // 初始化 18 朵花
+  // initialize 18 flowers evenly spaced across the width, with random y positions
+  //  in the grass area
   for (let i = 0; i < 18; i++) {
     let x = map(i, 0, 18, 60, width - 60); 
     let y = random(height * 0.65, height - 50); 
     flowers.push(new Flower(x, y)); 
   }
-  lastWitherTime = millis(); // 记录程序启动时的毫秒数
+  lastWitherTime = millis(); // Record the milliseconds when the program starts
 }
 
 function draw() {
-  clear(); // 清除上一帧绘制，保持背景透明
+  clear(); // Clear the rendering from the previous frame while 
+//maintaining a transparent background.
 
-  // --- 改进点 2：凋谢重生频率改为 12 秒 ---
-  // millis() 是程序运行的总毫秒数，12000 毫秒即 12 秒
+  // This code was generated with help from Gemini to create the cycle of flower growth
+  // Every 12 seconds, the flower withers and regrows at a different location.
   if (millis() - lastWitherTime > 12000) {
     witherAndRegrow(); 
-    lastWitherTime = millis(); // 重置计时器
-    showSubtitle("Cycles of nature..."); // 更新底部文字
+    lastWitherTime = millis(); // Reset the timer
+    showSubtitle("Cycles of nature..."); // Update the bottom text
   }
 
-  // 渲染所有花朵
+  // Rendering all flowers
   for (let f of flowers) {
     f.update(); 
     f.display(); 
   }
 
-  updateSubtitles(); // 刷新字幕状态
+  updateSubtitles(); // Update subtitle display and transition effects.
 }
 
-// ---------------- 核心逻辑函数 ----------------
+// ---------------- Core logic functions ----------------
 
+ // This function was generated with help from Gemini to generate three new flowers at random locations.
 function witherAndRegrow() {
-  // 随机选出 3 朵花进行位置替换
+  // Randomly select three flowers and swap their positions.
   for (let k = 0; k < 3; k++) {
-    let index = floor(random(flowers.length)); // 随机选一个现有的花朵索引
-    // 在画布草地范围内重新生成随机坐标
+    let index = floor(random(flowers.length)); // Randomly select an existing flower index
+    // Regenerate random coordinates within the canvas grass area.
     let newX = random(60, width - 60); 
     let newY = random(height * 0.65, height - 50);
-    // 用一个全新的 Flower 对象替换数组中旧的对象，实现消失并重生的效果
+    // Replace the old Flower object in the array with a brand-new one to achieve a 
+    // "disappear and respawn" effect.
     flowers[index] = new Flower(newX, newY); 
   }
 }
 
+
 function mouseMoved() {
   for (let f of flowers) {
-    f.checkHover(mouseX, mouseY); // 鼠标移动时检测碰撞触发摆动
+    //This function was generated with help from Gemini to create a hover effect that 
+    // causes the flowers to sway when the mouse is near them.
+    f.checkHover(mouseX, mouseY); // Check for hover effect when mouse moves
   }
 }
 
+//This function was generated with help from Gemini to show dynamic subtitles
 function showSubtitle(txt) {
   subtitleText = txt;
   targetAlpha = 255;
@@ -65,21 +73,21 @@ function showSubtitle(txt) {
 
 function updateSubtitles() {
   subtitleAlpha = lerp(subtitleAlpha, targetAlpha, 0.05);
-  fill(0, 0, 100, subtitleAlpha); // 白色文字
+  fill(0, 0, 100, subtitleAlpha); // white text
   noStroke();
   textAlign(CENTER);
   textSize(20);
   text(subtitleText, width / 2, height - 40);
 }
 
-// ---------------- 花朵类定义 ----------------
+// ---------------- Define flowers ----------------
 
 class Flower {
   constructor(x, y) {
     this.x = x;
     this.y = y;
     
-    // --- 生长参数 ---
+    // --- Growth parameters ---
     this.baseSize = random(35, 60);       
     this.currentSize = 0;                 
     this.targetSize = this.baseSize;      
@@ -88,45 +96,55 @@ class Flower {
     this.currentStemHeight = 0;           
     this.growthSpeed = random(0.015, 0.035);
     
-    // --- 颜色参数 ---
+    // --- Color parameters ---
+    //This code was generated with help from Gemini to adjust the initial saturation 
     this.petalCount = floor(map(this.baseSize, 35, 60, 5, 8.5)); 
-    let colorOptions = [330, 200, 270, 290]; // 粉色、蓝色、紫色系
+    let colorOptions = [330, 200, 270, 290]; 
+    // Let flowers have a variety of base hues (red, blue, purple, pink)
     this.baseHue = random(colorOptions); 
     
-    // --- 改进点 1：调深未点击状态的颜色 ---
-    this.currentSat = 45; // 初始饱和度从 20 提高到 45，让颜色看起来更深更明显
-    this.targetSat = 45;  // 默认目标饱和度
+    // --- Saturation parameters ---
+    // of the flowers,making them more vibrant and visually appealing from the 
+    // moment they start growing.
+    this.currentSat = 45; 
+    // The initial saturation has been increased from 20 to 45, 
+    // making the colors appear deeper and more pronounced.
+    this.targetSat = 45;  // Default target saturation
     
     this.angle = 0;                       
     this.swingForce = 0;                  
     this.isBeingPressed = false;          
   }
 
+
   update() {
-    // 平滑生长逻辑
+    // Growth logic: smoothly transition current stem height and size towards 
+    // their targets
     this.currentStemHeight = lerp(this.currentStemHeight, this.maxStemHeight, this.growthSpeed);
     let sizeProgress = map(this.currentStemHeight, 0, this.maxStemHeight, 0, this.targetSize);
     this.currentSize = lerp(this.currentSize, sizeProgress, 0.1);
 
-    // 饱和度过渡逻辑
+    // Saturation transition logic
     this.currentSat = lerp(this.currentSat, this.targetSat, 0.1);
 
-    // 摇摆物理逻辑
+    // Swinging physics logic
     this.swingForce = lerp(this.swingForce, 0, 0.05); 
     this.angle = sin(frameCount * 0.1) * this.swingForce;
 
-    // 长按交互逻辑
+    // Long press interaction logic
     if (this.currentStemHeight > this.maxStemHeight * 0.8) {
       if (mouseIsPressed && dist(mouseX, mouseY, this.x, this.y - this.currentStemHeight) < this.currentSize) {
         this.targetSize = this.baseSize * 1.6; 
-        this.targetSat = 90; // 被点击时变得非常鲜艳
+        this.targetSat = 90; 
+        // Increase saturation to make the flower more vibrant when pressed
         if (!this.isBeingPressed) {
           showSubtitle("Energy flowing into the petals!"); 
           this.isBeingPressed = true;
         }
       } else {
         this.targetSize = this.baseSize;      
-        this.targetSat = 45; // 松开后恢复到稍深但不极端的颜色
+        this.targetSat = 45; 
+        // Reset saturation back to normal when not pressed
         this.isBeingPressed = false;
       }
     }
@@ -137,35 +155,37 @@ class Flower {
     translate(this.x, this.y); 
     rotate(this.angle); 
 
-    // 绘制花茎
+    // Draw the stem
     stroke(140, 40, 30); 
     strokeWeight(4);
     line(0, 0, 0, -this.currentStemHeight); 
 
-    // 绘制叶子
+    // Draw the leaves
     if (this.currentStemHeight > 20) {
       let leafY = -this.currentStemHeight * 0.25; 
       this.drawLeaf(0, leafY, true);  
       this.drawLeaf(0, leafY, false); 
     }
 
-    translate(0, -this.currentStemHeight); // 移动到花茎顶端绘制花头
+    translate(0, -this.currentStemHeight); // Move to the top of the stem to draw the flower head
 
-    // --- 改进点 1：绘制花瓣，设置不透明度为 90 ---
+    // --- Draw petals ---
     if (this.currentStemHeight > 10) {
       noStroke();
-      // fill 参数：色相, 饱和度, 亮度, 不透明度(90)
+      // This code was generated with help from Gemini to enhance the visual 
+      // appeal of the flowers by increasing their saturation when they are 
+      // fully bloomed or being pressed, making them more vibrant and eye-catching.
       fill(this.baseHue, this.currentSat, 95, 90); 
       
       for (let i = 0; i < this.petalCount; i++) {
         push();
         rotate(TWO_PI * i / this.petalCount); 
-        // 绘制花瓣椭圆
+        // Draw petal ellipse
         ellipse(this.currentSize * 0.4, 0, this.currentSize * 0.8, this.currentSize * 0.4);
         pop();
       }
 
-      // 绘制花蕊
+      // Draw the pistil
       fill(50, 70, 100); 
       circle(0, 0, this.currentSize * 0.25);
     }
@@ -175,6 +195,11 @@ class Flower {
   drawLeaf(lx, ly, side) {
     push();
     translate(lx, ly);
+
+    // This code was generated with help from Gemini to enhance the visual appeal of 
+    // the leaves by adjusting their size based on the growth stage of the flower, 
+    // making them more prominent as the flower grows taller, which adds to the 
+    // overall aesthetic and realism of the plant.
     if (side) { rotate(PI + QUARTER_PI); } 
     else { rotate(-QUARTER_PI); }
     
@@ -188,6 +213,10 @@ class Flower {
     pop();
   }
 
+
+  // This function was generated with help from Gemini to create an interactive hover
+  //  effect that causes the flowers to sway when the mouse is near them, 
+  // adding a dynamic and responsive
   checkHover(mx, my) {
     let d = dist(mx, my, this.x, this.y - this.currentStemHeight);
     if (d < 45) {

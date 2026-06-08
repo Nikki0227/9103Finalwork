@@ -1,15 +1,18 @@
 // ==================== Berlin / Perlin Noise Effects ====================
 // This file adds soft natural variation to the audio layer using p5 noise().
+// This file was generated with help from Codex to add Perlin-noise rain, cloud, and light-particle effects.
 
 const BerlinNoiseEffects = {
   rainZ: 1000,
 
+  // This code was generated with help from Codex to vary rain density with Perlin noise.
   rainDensity(level) {
     let wave = noise(this.rainZ);
     this.rainZ += 0.006;
     return floor(CONFIG.rain.maxCount * level * map(wave, 0, 1, 0.35, 1.35));
   },
 
+  // This code was generated with help from Codex to update raindrop count from noise.
   applyRainDensity(controller) {
     let rainLevel = controller.effectLevels.rain;
     if (rainLevel <= 0.01 || typeof Raindrop === "undefined") return;
@@ -26,6 +29,7 @@ const BerlinNoiseEffects = {
   }
 };
 
+// This code was generated with help from Codex to draw a transparent light-particle layer.
 function createBerlinNoiseParticleLayer() {
   new p5((p) => {
     let particles = [];
@@ -52,6 +56,7 @@ function createBerlinNoiseParticleLayer() {
       }
     };
 
+    // This code was generated with help from Codex to make particles drift with Perlin noise.
     p.draw = function() {
       p.clear();
       p.noStroke();
@@ -93,6 +98,7 @@ function createBerlinNoiseParticleLayer() {
   });
 }
 
+// This code was generated with help from Codex to attach noise effects to existing classes.
 function installBerlinNoiseEffects() {
   if (typeof SoundInteractionController !== "undefined") {
     let originalUpdate = SoundInteractionController.prototype.update;
@@ -104,6 +110,7 @@ function installBerlinNoiseEffects() {
 
   if (typeof Cloud !== "undefined") {
     let originalCloudUpdate = Cloud.prototype.update;
+    // This code was generated with help from Codex to add noise-based cloud floating.
     Cloud.prototype.update = function() {
       if (this.noiseOffset === undefined) this.noiseOffset = random(1000);
       if (this.baseNoiseY === undefined || this.x <= -190) this.baseNoiseY = this.y;
@@ -116,6 +123,7 @@ function installBerlinNoiseEffects() {
     };
 
     let originalCloudDisplay = Cloud.prototype.display;
+    // This code was generated with help from Codex to add small translucent cloud wisps.
     Cloud.prototype.display = function() {
       originalCloudDisplay.call(this);
 
@@ -146,6 +154,7 @@ function installBerlinNoiseEffects() {
 
   if (typeof Raindrop !== "undefined") {
     let originalRaindropUpdate = Raindrop.prototype.update;
+    // This code was generated with help from Codex to give raindrops noise-based drift.
     Raindrop.prototype.update = function() {
       if (this.noiseOffset === undefined) this.noiseOffset = random(1000);
 

@@ -1,11 +1,15 @@
 // ==================== Berlin / Perlin Noise Effects ====================
 // This file adds soft natural variation to the audio layer using p5 noise().
 // This file was generated with help from Codex to add Perlin-noise rain, cloud, and light-particle effects.
+// It is loaded both inside the audio iframe and on the main index page.
+// In the audio iframe it extends existing rain and cloud classes; on the main page it creates a transparent particle overlay.
 
 const BerlinNoiseEffects = {
   rainZ: 1000,
 
   // This code was generated with help from Codex to vary rain density with Perlin noise.
+  // The rainZ value moves slowly through the noise field, so the target rain count changes smoothly instead of jumping randomly.
+  // The returned value scales with the current rain audio level, keeping the visual density connected to the sound effect.
   rainDensity(level) {
     let wave = noise(this.rainZ);
     this.rainZ += 0.006;
@@ -13,6 +17,9 @@ const BerlinNoiseEffects = {
   },
 
   // This code was generated with help from Codex to update raindrop count from noise.
+  // It compares the current number of raindrops with the noise-based target count.
+  // New Raindrop objects are added when the target density rises, and extra drops are trimmed when the density falls.
+  // This makes rainfall feel like natural waves of heavier and lighter rain.
   applyRainDensity(controller) {
     let rainLevel = controller.effectLevels.rain;
     if (rainLevel <= 0.01 || typeof Raindrop === "undefined") return;
@@ -30,10 +37,14 @@ const BerlinNoiseEffects = {
 };
 
 // This code was generated with help from Codex to draw a transparent light-particle layer.
+// It uses p5 instance mode so this overlay has its own setup() and draw() without replacing the other sketches' global p5 functions.
+// The canvas is fixed over the viewport, has pointer-events disabled, and is cleared every frame so it never paints an opaque background.
 function createBerlinNoiseParticleLayer() {
   new p5((p) => {
     let particles = [];
 
+    // This setup code was generated with help from Codex to create small, subtle light particles.
+    // Each particle stores a position, size, speed, opacity, and noise seed so every particle drifts in its own path.
     p.setup = function() {
       let canvas = p.createCanvas(p.windowWidth, p.windowHeight);
       canvas.elt.classList.add("berlin-noise-canvas");
@@ -57,6 +68,8 @@ function createBerlinNoiseParticleLayer() {
     };
 
     // This code was generated with help from Codex to make particles drift with Perlin noise.
+    // p.clear() keeps the layer transparent, SCREEN blending makes the particles feel like light, and noise controls drift and glow.
+    // Particles wrap around the viewport edges so the overlay remains continuous over time.
     p.draw = function() {
       p.clear();
       p.noStroke();
@@ -99,9 +112,12 @@ function createBerlinNoiseParticleLayer() {
 }
 
 // This code was generated with help from Codex to attach noise effects to existing classes.
+// It stores the original update/display functions, then wraps them with extra noise behavior.
+// This keeps the original audio-base code working while adding rain-density, cloud, and raindrop movement effects.
 function installBerlinNoiseEffects() {
   if (typeof SoundInteractionController !== "undefined") {
     let originalUpdate = SoundInteractionController.prototype.update;
+    // This wrapper was generated with help from Codex to run the original controller update first, then adjust rain density afterward.
     SoundInteractionController.prototype.update = function() {
       originalUpdate.call(this);
       BerlinNoiseEffects.applyRainDensity(this);
@@ -111,6 +127,8 @@ function installBerlinNoiseEffects() {
   if (typeof Cloud !== "undefined") {
     let originalCloudUpdate = Cloud.prototype.update;
     // This code was generated with help from Codex to add noise-based cloud floating.
+    // Each cloud gets a stable noise offset, which makes its vertical motion smooth and slightly different from the other clouds.
+    // The wind level increases the floating amount so cloudy movement responds more strongly during wind audio events.
     Cloud.prototype.update = function() {
       if (this.noiseOffset === undefined) this.noiseOffset = random(1000);
       if (this.baseNoiseY === undefined || this.x <= -190) this.baseNoiseY = this.y;
@@ -124,6 +142,8 @@ function installBerlinNoiseEffects() {
 
     let originalCloudDisplay = Cloud.prototype.display;
     // This code was generated with help from Codex to add small translucent cloud wisps.
+    // The original cloud is drawn first, then several faint ellipses are added using noise-based offsets and sizes.
+    // SCREEN blending keeps the wisps soft and light so they do not hide the main garden elements.
     Cloud.prototype.display = function() {
       originalCloudDisplay.call(this);
 
@@ -155,6 +175,8 @@ function installBerlinNoiseEffects() {
   if (typeof Raindrop !== "undefined") {
     let originalRaindropUpdate = Raindrop.prototype.update;
     // This code was generated with help from Codex to give raindrops noise-based drift.
+    // The original falling motion still happens, but each raindrop receives a gentle sideways offset from Perlin noise.
+    // Wind audio increases the sideways movement, making the rain feel more affected by the weather.
     Raindrop.prototype.update = function() {
       if (this.noiseOffset === undefined) this.noiseOffset = random(1000);
 
@@ -167,6 +189,8 @@ function installBerlinNoiseEffects() {
     };
   }
 
+  // This branch was generated with help from Codex for the main index page.
+  // If the audio classes are not present, the file creates only the transparent particle layer and does not try to patch audio objects.
   if (typeof SoundInteractionController === "undefined" && typeof p5 !== "undefined") {
     createBerlinNoiseParticleLayer();
   }

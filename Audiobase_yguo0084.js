@@ -1,6 +1,8 @@
 // ==================== Globals ====================
 let fft;
 // This code was generated with help from Codex to detect loud thunder peaks.
+// It creates a p5.Amplitude analyser later in setup(), connected only to thunderSound.
+// The analyser lets the program read the thunder clip's real-time loudness and use that data to time lightning flashes.
 let thunderAmplitude;
 
 let windSound, rainSound, thunderSound, insectSound, birdSound, bgm;
@@ -20,6 +22,9 @@ const CONFIG = {
     birdSpawnGap: 1200,
     insectSpawnGap: 1000,
     // These settings were generated with help from Codex to tune thunder-triggered lightning.
+    // thunderPeakThreshold is the minimum loudness needed before a thunder sound can create lightning.
+    // thunderPeakRise compares the current frame with the previous frame, so lightning appears on sudden audio peaks.
+    // thunderLightningGap prevents too many flashes from happening in a very short time.
     thunderPeakThreshold: 0.12,
     thunderPeakRise: 1.18,
     thunderLightningGap: 280
@@ -66,6 +71,8 @@ function playSound(sound, volume = 0.75) {
 }
 
 // This code was generated with help from Codex to loop bgm.mp3 as background music.
+// It checks whether the bgm file exists, has finished loading, and is not already playing before starting the loop.
+// This prevents duplicate background tracks from stacking when setup(), mousePressed(), or touchStarted() call the same function.
 function startBackgroundMusic() {
   if (!bgm || !bgm.isLoaded() || bgm.isPlaying()) return;
 
@@ -649,6 +656,8 @@ class SoundInteractionController {
     if (type === "insect") this.spawnInsect();
     if (type === "rain" && !this.rainStartedAt) this.rainStartedAt = millis();
     // This code was generated with help from Codex to reset thunder peak tracking.
+    // When a new thunder clip starts, the stored previous volume is cleared so the first loud rise can be detected cleanly.
+    // The last flash time is also reset, allowing the new thunder event to create lightning from its own audio peaks.
     if (type === "thunder") {
       this.lastThunderLevel = 0;
       this.lastThunderLightningAt = 0;
@@ -687,6 +696,9 @@ class SoundInteractionController {
   }
 
   // This code was generated with help from Codex to trigger lightning from thunder audio peaks.
+  // It reads thunderAmplitude every frame while thunderSound is playing.
+  // A flash is triggered only when the current volume is loud enough, rising quickly enough, and not too close to the previous flash.
+  // This makes the visual lightning follow the strongest moments inside thunder.mp3 instead of flashing only once at the start.
   updateThunderLightning() {
     if (!thunderAmplitude || !thunderSound || !thunderSound.isPlaying()) {
       this.lastThunderLevel = 0;
@@ -865,7 +877,8 @@ function preload() {
   thunderSound = loadSound("asset/thunder.mp3");
   insectSound = loadSound("asset/insect.mp3");
   birdSound = loadSound("asset/bird.mp3");
-  // This code was generated with help from Codex to load bgm.mp3.
+  // This code was generated with help from Codex to load bgm.mp3 for the looping background music.
+  // It keeps the ambient music separate from the short random weather and nature sound effects.
   bgm = loadSound("asset/bgm.mp3");
 }
 
@@ -875,12 +888,15 @@ function setup() {
 
   fft = new p5.FFT();
   // This code was generated with help from Codex to analyse thunderSound volume.
+  // The smoothing value makes amplitude changes less jittery, while setInput(thunderSound) limits the analyser to the thunder clip.
+  // Because the analyser does not listen to bgm, rain, birds, insects, or wind, those sounds will not accidentally trigger lightning.
   thunderAmplitude = new p5.Amplitude(0.75);
   thunderAmplitude.setInput(thunderSound);
   soundInteraction = new SoundInteractionController();
   soundInteraction.init();
   soundInteraction.startAudioInteraction();
-  // This code was generated with help from Codex to start background music.
+  // This code was generated with help from Codex to start background music as soon as the audio layer is ready.
+  // If the browser blocks autoplay, the fallback handlers below try again after user interaction.
   startBackgroundMusic();
 
   window.soundInteraction = soundInteraction;
@@ -897,11 +913,13 @@ function windowResized() {
 }
 
 // This code was generated with help from Codex to start bgm.mp3 after a click.
+// Many browsers block autoplay until a user interacts with the page, so this retries the same safe startBackgroundMusic() function.
 function mousePressed() {
   startBackgroundMusic();
 }
 
 // This code was generated with help from Codex to start bgm.mp3 after a touch.
+// This provides the same autoplay fallback on touch-screen devices such as phones and tablets.
 function touchStarted() {
   startBackgroundMusic();
 }

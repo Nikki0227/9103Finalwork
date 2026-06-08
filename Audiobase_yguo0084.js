@@ -1,5 +1,6 @@
 // ==================== Globals ====================
 let fft;
+// This code was generated with help from Codex to detect loud thunder peaks.
 let thunderAmplitude;
 
 let windSound, rainSound, thunderSound, insectSound, birdSound, bgm;
@@ -18,6 +19,7 @@ const CONFIG = {
     fade: 1400,
     birdSpawnGap: 1200,
     insectSpawnGap: 1000,
+    // These settings were generated with help from Codex to tune thunder-triggered lightning.
     thunderPeakThreshold: 0.12,
     thunderPeakRise: 1.18,
     thunderLightningGap: 280
@@ -63,6 +65,7 @@ function playSound(sound, volume = 0.75) {
   sound.play();
 }
 
+// This code was generated with help from Codex to loop bgm.mp3 as background music.
 function startBackgroundMusic() {
   if (!bgm || !bgm.isLoaded() || bgm.isPlaying()) return;
 
@@ -645,6 +648,7 @@ class SoundInteractionController {
     if (type === "bird") this.spawnBird();
     if (type === "insect") this.spawnInsect();
     if (type === "rain" && !this.rainStartedAt) this.rainStartedAt = millis();
+    // This code was generated with help from Codex to reset thunder peak tracking.
     if (type === "thunder") {
       this.lastThunderLevel = 0;
       this.lastThunderLightningAt = 0;
@@ -682,6 +686,7 @@ class SoundInteractionController {
     this.audioEvents = this.audioEvents.filter(event => now - event.start < event.duration);
   }
 
+  // This code was generated with help from Codex to trigger lightning from thunder audio peaks.
   updateThunderLightning() {
     if (!thunderAmplitude || !thunderSound || !thunderSound.isPlaying()) {
       this.lastThunderLevel = 0;
@@ -860,6 +865,7 @@ function preload() {
   thunderSound = loadSound("asset/thunder.mp3");
   insectSound = loadSound("asset/insect.mp3");
   birdSound = loadSound("asset/bird.mp3");
+  // This code was generated with help from Codex to load bgm.mp3.
   bgm = loadSound("asset/bgm.mp3");
 }
 
@@ -868,11 +874,13 @@ function setup() {
   clear();
 
   fft = new p5.FFT();
+  // This code was generated with help from Codex to analyse thunderSound volume.
   thunderAmplitude = new p5.Amplitude(0.75);
   thunderAmplitude.setInput(thunderSound);
   soundInteraction = new SoundInteractionController();
   soundInteraction.init();
   soundInteraction.startAudioInteraction();
+  // This code was generated with help from Codex to start background music.
   startBackgroundMusic();
 
   window.soundInteraction = soundInteraction;
@@ -888,10 +896,12 @@ function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
 }
 
+// This code was generated with help from Codex to start bgm.mp3 after a click.
 function mousePressed() {
   startBackgroundMusic();
 }
 
+// This code was generated with help from Codex to start bgm.mp3 after a touch.
 function touchStarted() {
   startBackgroundMusic();
 }

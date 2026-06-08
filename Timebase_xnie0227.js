@@ -82,7 +82,7 @@ function draw() {
   if (elapsed > totalCycle) {
     cycleStart = millis();
     elapsed = 0;
-    seasonChanged = false; // 解锁，允许新一轮的黑夜切换季节
+    seasonChanged = false; // 解锁，允许新一轮的黑夜切换
   }
 
   // =====================================================
@@ -145,7 +145,7 @@ function draw() {
 
 function drawSunMoon(elapsed, totalCycle) {
   let cx = width / 2;
-  let cy = height * 0.75; 
+  let cy = height * 0.67;  // ✅ 修改：从 0.75 → 0.67（适配草地1/3）
 
   let radiusX = width * 0.45;  
   let radiusY = height * 0.45; 
@@ -233,7 +233,7 @@ function drawGround(t) {
 
   noStroke();
   fill(grass);
-  rect(0, height * 0.75, width, height * 0.25);
+  rect(0, height * 0.67, width, height * 0.33);  // ✅ 修改：草地占屏幕下方 1/3
 }
 
 // =====================================================
@@ -341,3 +341,6 @@ function drawSnowflakes() {
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
 }
+
+//AI APPENDIX: 
+//All creative design, visual and interactive logic of this work are completed independently by myself. ChatGPT assisted in code writing; all parameters, animations and visual effects were self-inspected, revised and debugged by me. AI only serves as coding assistance, all core designs and logic are original to me, and I take full responsibility for this creation.

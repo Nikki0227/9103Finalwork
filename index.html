@@ -1,51 +1,40 @@
 <!DOCTYPE html>
-<html lang="zh">
-<head>
-    <meta charset="UTF-8">
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>梦幻四季交互花园</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/addons/p5.sound.min.js"></script>
-    
-    <style>
-        /* 确保画布填满屏幕且无滚动条 */
-        body {
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-            background-color: #0b0f1e;
-        }
-        /* 提示用户点击互动的小浮层（解决浏览器强制静音策略） */
-        #audio-hint {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            color: rgba(255, 255, 255, 0.7);
-            font-family: sans-serif;
-            font-size: 14px;
-            pointer-events: none;
-            background: rgba(0,0,0,0.4);
-            padding: 8px 16px;
-            border-radius: 20px;
-            z-index: 1000;
-        }
-    </style>
-</head>
-<body>
 
-    <div id="audio-hint">🎵 移动鼠标让花朵摇摆，点击任意位置激活梦幻乐章</div>
+    <title>Sketch</title>
 
-    <script src="input.js"></script>
-    <script src="audio.js"></script>
-    <script src="timebase.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
 
-    <script>
-        // 当用户首次点击页面时，自动隐藏提示框
-        window.addEventListener('click', () => {
-            const hint = document.getElementById('audio-hint');
-            if(hint) hint.style.display = 'none';
-        });
-    </script>
-</body>
+    <script src="libraries/p5.min.js"></script>
+    <script src="libraries/p5.sound.min.js"></script>
+  </head>
+
+  <body>
+  <!-------Introduction------->
+  <div id="how-to-play" class="instructions">
+        <h2>• HOW TO PLAY •</h2>
+        <div class="instruction-item">
+            <span class="icon">🖱️</span>
+            <p>Move your mouse to touch the flowers and see them react.</p>
+        </div>
+        <div class="instruction-item">
+            <span class="icon">👆</span>
+            <p>Click a flower to bloom and play music.</p>
+        </div>
+        <div class="instruction-item">
+            <span class="icon">🎵</span>
+            <p>Feel the rhythm, enjoy the garden!</p>
+        </div>
+    </div>
+ <!-------Introduction------->
+
+
+    <script src="Timebase_xnie0227.js"></script>
+    <script src="input_controls_fcao0453.js"></script>
+    <script src="Audiobase_yguo0084.js"></script>
+    <script src="sketch4.js"></script>
+  </body>
 </html>
